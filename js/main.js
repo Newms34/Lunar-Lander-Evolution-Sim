@@ -78,7 +78,8 @@ var app = angular.module('lb-app', []).controller('ground-control', function($sc
                 $scope.ships[n].x += Math.floor($scope.ships[n].dx);
                 $scope.ships[n].y += Math.floor($scope.ships[n].dy);
                 var prox = $scope.getDist($scope.ships[n].x, $scope.ships[n].y, $scope.moon.x * $scope.w, $scope.moon.y * $scope.h);
-                $scope.ships[n].score = prox;
+                var vTotal = $scope.getDist($scope.ships[n].dx,0,$scope.ships[n].dy,0);
+                $scope.ships[n].score = prox+vTotal;
                 //detect boundz 
                 if ($scope.ships[n].x < 0 || $scope.ships[n].x > $scope.w - 50 || $scope.ships[n].y < 0 || $scope.ships[n].y > $scope.h - 50) {
                     $scope.restart = true;
