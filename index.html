@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" type="text/css" href="./css/style.css">
+
+<head>
+    <title>Lunar Lander Neural Network</title>
+</head>
+
+<body ng-app='lb-app' ng-controller='ground-control'>
+<br/>
+<h3>Number of generations:{{gens}}</h3>
+<br/>
+<div id='muta'>&#9763;</div>
+    <div id='ship' ng-repeat ='ship in ships' style='left:{{ship.x}}px;top:{{ship.y}}px;'>
+        <div class='eng' ng-repeat='e in ship.engines' style='transform:rotateZ({{e.a}}deg);' ng-show='
+        e.on'>
+        	<div class='t' style='background:hsl({{60*e.p/100}},100%,{{(50*e.p/100)+10}}%);box-shadow:0 0 {{10*e.p/100}}px {{5*e.p/100}}px hsl({{60*e.p/100}},100%,{{(50*e.p/100)+10}}%);'>
+        	</div>
+        </div>
+    </div>
+    <div id='moon' style='left:{{(w*moon.x)}}px;top:{{(h*moon.y)}}px;'></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script src="./js/main.js"></script>
+</body>
+
+</html>
