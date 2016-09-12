@@ -34,6 +34,7 @@ var app = angular.module('lb-app', []).controller('ground-control', function($sc
         this.engHasFired = false;
         this.lastDeactivatedTime = false;
         this.score = 0;
+        this.pointerAng = 0;
     }
     $scope.mutaRate = 0.9
     $scope.moon = {
@@ -71,6 +72,10 @@ var app = angular.module('lb-app', []).controller('ground-control', function($sc
                 }
                 $scope.ships[n].dx += Math.floor(dxTotal) * .01;
                 $scope.ships[n].dy += Math.floor(dyTotal) * .01;
+                $scope.ships[n].pointerAng = Math.atan((0-$scope.ships[n].dy)/(0-$scope.ships[n].dx)) * 180 / Math.PI;
+                if ($scope.ships[n].dy<=0){
+                	$scope.ships[n].pointerAng-=180;
+                }
                 if ($scope.ships[n].engHasFired) {
                     $scope.ships[n].dy += $scope.g;
                     console.log('gravity added')
@@ -151,10 +156,10 @@ var app = angular.module('lb-app', []).controller('ground-control', function($sc
             for (i = 0; i < numEngs; i++) {
                 try {
 
-                    var angle = Math.random() < .7 ? gud.engines[i].a : bad.engines[i].a,
-                        power = Math.random() < .7 ? gud.engines[i].p : bad.engines[i].p,
-                        start = Math.random() < .7 ? gud.engines[i].s : bad.engines[i].s,
-                        end = Math.random() < .7 ? gud.engines[i].e : bad.engines[i].e;
+                    var angle = Math.random() < .7 && gud.engines[i]? gud.engines[i].a : bad.engines[i].a,
+                        power = Math.random() < .7 && gud.engines[i]? gud.engines[i].p : bad.engines[i].p,
+                        start = Math.random() < .7 && gud.engines[i]? gud.engines[i].s : bad.engines[i].s,
+                        end = Math.random() < .7 && gud.engines[i]? gud.engines[i].e : bad.engines[i].e;
                 } catch (e) {
                     $scope.ticker = null;
                     alert('ERROR OCCURED! Check console')

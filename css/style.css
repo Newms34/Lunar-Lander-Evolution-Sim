@@ -9,7 +9,7 @@ html,body{
 #ship{
 	width: 50px;
 	height:50px;
-	background:#777;
+	border:3px solid #777;
 	border-radius: 50%;
 	position:absolute;
 
