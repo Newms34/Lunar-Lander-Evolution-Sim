@@ -82,7 +82,6 @@ var app = angular.module('lb-app', []).controller('ground-control', function($sc
                 //detect boundz 
                 if ($scope.ships[n].x < 0 || $scope.ships[n].x > $scope.w - 50 || $scope.ships[n].y < 0 || $scope.ships[n].y > $scope.h - 50) {
                     $scope.restart = true;
-                    alert('OUT OF BOUNDS!')
                 }
                 //stalling prevention
                 if($scope.ships[n].lastDeactivatedTime && typeof $scope.ships[n].lastDeactivatedTime == 'number' && new Date().getTime() - $scope.ships[n].lastDeactivatedTime < 20000){
@@ -104,7 +103,7 @@ var app = angular.module('lb-app', []).controller('ground-control', function($sc
     	$scope.gens++;
         console.log('SHIP FACTORY', gud, bad)
         if (!gud || !bad) {
-            alert('one of your ships isnt defined')
+            console.log('one of your ships isnt defined')
                 //no ships, so make 2
             var engs = [];
             for (var e = 0; e < 2; e++) {
