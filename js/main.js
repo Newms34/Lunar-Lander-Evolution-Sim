@@ -5,6 +5,7 @@ var app = angular.module('lb-app', []).controller('ground-control', function($sc
     $scope.h = $(window).height();
     $scope.g = .1; //gravity!
     $scope.engines = [];
+    $scope.bestWorstMode = false;
     $scope.gens=0;
     $scope.ships = [];
     $scope.Thruster = function(a, p, s, e) {
@@ -121,11 +122,23 @@ var app = angular.module('lb-app', []).controller('ground-control', function($sc
             $scope.ships.push(new $scope.shipCon(engs[0]), new $scope.shipCon(engs[1]));
             console.log($scope.ships)
         } else {
-            //first, num engines
+            if(!$scope.bestWorstMode){
+            	//first parent is 'gud', second parent is random
+            	var arr = [];
+                var numEngs = 3 + Math.ceil(Math.random() * 5);
+                for (var i = 0; i < numEngs; i++) {
+                    var angle = 90+Math.floor(Math.random() * 180),
+                        power = Math.random() * 10,
+                        start = Math.floor(Math.random() * 20000),
+                        end = Math.floor(Math.random() * 20000);
+                    arr.push(new $scope.Thruster(angle, power, start, end));
+                }
+                bad = new $scope.shipCon(arr);
+            }
             var numEngs = Math.random() < .7 ? gud.engines.length : bad.engines.length,
                 engArr = [],
                 mutation=false;
-            if (Math.random() > $scope.mutaRate) {
+            if (Math.random() > $scope.mutaRate && $scope.bestWorstMode) {
                 //randomly change number of engines
                 mutation=true;
                 if (Math.random() > .5) {
@@ -134,7 +147,8 @@ var app = angular.module('lb-app', []).controller('ground-control', function($sc
                     numEngs--;
                 }
             }
-            for (var i = 0; i < numEngs; i++) {
+            
+            for (i = 0; i < numEngs; i++) {
                 try {
 
                     var angle = Math.random() < .7 ? gud.engines[i].a : bad.engines[i].a,
@@ -147,19 +161,19 @@ var app = angular.module('lb-app', []).controller('ground-control', function($sc
                     console.log(e, gud, bad)
                 }
                 //now optionally mutate engines
-                if (Math.random() > $scope.mutaRate) {
+                if (Math.random() > $scope.mutaRate && $scope.bestWorstMode) {
                 	mutation=true;
                     angle = Math.floor(Math.random() * 360);
                 }
-                if (Math.random() > $scope.mutaRate) {
+                if (Math.random() > $scope.mutaRate && $scope.bestWorstMode) {
                 	mutation=true;
                     power = Math.random() * 10;
                 }
-                if (Math.random() > $scope.mutaRate) {
+                if (Math.random() > $scope.mutaRate && $scope.bestWorstMode) {
                 	mutation=true;
                     start = Math.floor(Math.random() * 20000);
                 }
-                if (Math.random() > $scope.mutaRate) {
+                if (Math.random() > $scope.mutaRate && $scope.bestWorstMode) {
                 	mutation=true;
                     end = Math.floor(Math.random() * 20000);
                 }
