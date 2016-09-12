@@ -6,7 +6,7 @@ var app = angular.module('lb-app', []).controller('ground-control', function($sc
     $scope.g = .1; //gravity!
     $scope.engines = [];
     $scope.bestWorstMode = false;
-    $scope.gens=0;
+    $scope.gens = 0;
     $scope.ships = [];
     $scope.Thruster = function(a, p, s, e) {
         /*props: 
@@ -47,7 +47,7 @@ var app = angular.module('lb-app', []).controller('ground-control', function($sc
     $scope.allStalled = false;
     $scope.ticker = $interval(function() {
         if (!$scope.restart) {
-        	$scope.allStalled = true;
+            $scope.allStalled = true;
             for (var n = 0; n < $scope.ships.length; n++) {
                 var dxTotal = 0,
                     dyTotal = 0,
@@ -72,9 +72,9 @@ var app = angular.module('lb-app', []).controller('ground-control', function($sc
                 }
                 $scope.ships[n].dx += Math.floor(dxTotal) * .01;
                 $scope.ships[n].dy += Math.floor(dyTotal) * .01;
-                $scope.ships[n].pointerAng = Math.atan((0-$scope.ships[n].dy)/(0-$scope.ships[n].dx)) * 180 / Math.PI;
-                if ($scope.ships[n].dy<=0){
-                	$scope.ships[n].pointerAng-=180;
+                $scope.ships[n].pointerAng = Math.atan((0 - $scope.ships[n].dy) / (0 - $scope.ships[n].dx)) * 180 / Math.PI;
+                if ($scope.ships[n].dy <= 0) {
+                    $scope.ships[n].pointerAng -= 180;
                 }
                 if ($scope.ships[n].engHasFired) {
                     $scope.ships[n].dy += $scope.g;
@@ -83,15 +83,15 @@ var app = angular.module('lb-app', []).controller('ground-control', function($sc
                 $scope.ships[n].x += Math.floor($scope.ships[n].dx);
                 $scope.ships[n].y += Math.floor($scope.ships[n].dy);
                 var prox = $scope.getDist($scope.ships[n].x, $scope.ships[n].y, $scope.moon.x * $scope.w, $scope.moon.y * $scope.h);
-                var vTotal = $scope.getDist($scope.ships[n].dx,0,$scope.ships[n].dy,0);
-                $scope.ships[n].score = prox+vTotal;
+                var vTotal = $scope.getDist($scope.ships[n].dx, 0, $scope.ships[n].dy, 0);
+                $scope.ships[n].score = prox + vTotal;
                 //detect boundz 
                 if ($scope.ships[n].x < 0 || $scope.ships[n].x > $scope.w - 50 || $scope.ships[n].y < 0 || $scope.ships[n].y > $scope.h - 50) {
                     $scope.restart = true;
                 }
                 //stalling prevention
-                if($scope.ships[n].lastDeactivatedTime && typeof $scope.ships[n].lastDeactivatedTime == 'number' && new Date().getTime() - $scope.ships[n].lastDeactivatedTime < 20000){
-                	$scope.allStalled=false;
+                if ($scope.ships[n].lastDeactivatedTime && typeof $scope.ships[n].lastDeactivatedTime == 'number' && new Date().getTime() - $scope.ships[n].lastDeactivatedTime < 20000) {
+                    $scope.allStalled = false;
                 }
                 if ($scope.allStalled) {
                     $scope.restart = true;
@@ -106,7 +106,7 @@ var app = angular.module('lb-app', []).controller('ground-control', function($sc
         }
     }, 50);
     $scope.makeNewShip = function(gud, bad) {
-    	$scope.gens++;
+        $scope.gens++;
         console.log('SHIP FACTORY', gud, bad)
         if (!gud || !bad) {
             console.log('one of your ships isnt defined')
@@ -116,7 +116,7 @@ var app = angular.module('lb-app', []).controller('ground-control', function($sc
                 var arr = [];
                 var numEngs = 3 + Math.ceil(Math.random() * 5);
                 for (var i = 0; i < numEngs; i++) {
-                    var angle = 90+Math.floor(Math.random() * 180),
+                    var angle = 90 + Math.floor(Math.random() * 180),
                         power = Math.random() * 10,
                         start = Math.floor(Math.random() * 20000),
                         end = Math.floor(Math.random() * 20000);
@@ -127,12 +127,12 @@ var app = angular.module('lb-app', []).controller('ground-control', function($sc
             $scope.ships.push(new $scope.shipCon(engs[0]), new $scope.shipCon(engs[1]));
             console.log($scope.ships)
         } else {
-            if(!$scope.bestWorstMode){
-            	//first parent is 'gud', second parent is random
-            	var arr = [];
+            if (!$scope.bestWorstMode) {
+                //first parent is 'gud', second parent is random
+                var arr = [];
                 var numEngs = 3 + Math.ceil(Math.random() * 5);
                 for (var i = 0; i < numEngs; i++) {
-                    var angle = 90+Math.floor(Math.random() * 180),
+                    var angle = 90 + Math.floor(Math.random() * 180),
                         power = Math.random() * 10,
                         start = Math.floor(Math.random() * 20000),
                         end = Math.floor(Math.random() * 20000);
@@ -142,52 +142,70 @@ var app = angular.module('lb-app', []).controller('ground-control', function($sc
             }
             var numEngs = Math.random() < .7 ? gud.engines.length : bad.engines.length,
                 engArr = [],
-                mutation=false;
+                mutation = false;
             if (Math.random() > $scope.mutaRate && $scope.bestWorstMode) {
                 //randomly change number of engines
-                mutation=true;
+                mutation = true;
                 if (Math.random() > .5) {
                     numEngs++;
                 } else {
                     numEngs--;
                 }
             }
-            
+
             for (i = 0; i < numEngs; i++) {
                 try {
+                    var angle = 0,
+                        power = 0,
+                        start = 0,
+                        end = 0;
+                    if (!gud.engines[i]) {
+                        //no gud engine at this point, so just use bad
+                        angle = bad.engines[i].a;
+                        power = bad.engines[i].p;
+                        start = bad.engines[i].s;
+                        end = bad.engines[i].e;
+                    } else if (!bad.engines[i]) {
+                        //no bad engine at this point, so just use gud
+                        angle = gud.engines[i].a;
+                        power = gud.engines[i].p;
+                        start = gud.engines[i].s;
+                        end = gud.engines[i].e;
+                    } else {
+                    	//both engines exist
+                        angle = Math.random() < .7 && gud.engines[i] ? gud.engines[i].a : bad.engines[i].a,
+                            power = Math.random() < .7 && gud.engines[i] ? gud.engines[i].p : bad.engines[i].p,
+                            start = Math.random() < .7 && gud.engines[i] ? gud.engines[i].s : bad.engines[i].s,
+                            end = Math.random() < .7 && gud.engines[i] ? gud.engines[i].e : bad.engines[i].e;
+                    }
 
-                    var angle = Math.random() < .7 && gud.engines[i]? gud.engines[i].a : bad.engines[i].a,
-                        power = Math.random() < .7 && gud.engines[i]? gud.engines[i].p : bad.engines[i].p,
-                        start = Math.random() < .7 && gud.engines[i]? gud.engines[i].s : bad.engines[i].s,
-                        end = Math.random() < .7 && gud.engines[i]? gud.engines[i].e : bad.engines[i].e;
                 } catch (e) {
                     $scope.ticker = null;
-                    alert('ERROR OCCURED! Check console')
                     console.log(e, gud, bad)
                 }
                 //now optionally mutate engines
                 if (Math.random() > $scope.mutaRate && $scope.bestWorstMode) {
-                	mutation=true;
+                    mutation = true;
                     angle = Math.floor(Math.random() * 360);
                 }
                 if (Math.random() > $scope.mutaRate && $scope.bestWorstMode) {
-                	mutation=true;
+                    mutation = true;
                     power = Math.random() * 10;
                 }
                 if (Math.random() > $scope.mutaRate && $scope.bestWorstMode) {
-                	mutation=true;
+                    mutation = true;
                     start = Math.floor(Math.random() * 20000);
                 }
                 if (Math.random() > $scope.mutaRate && $scope.bestWorstMode) {
-                	mutation=true;
+                    mutation = true;
                     end = Math.floor(Math.random() * 20000);
                 }
                 engArr.push(new $scope.Thruster(angle, power, start, end));
             }
-            if(mutation){
-            	$('#muta').show(500).hide(500);
+            if (mutation) {
+                $('#muta').show(500).hide(500);
             }
-            $scope.ships = [new $scope.shipCon(gud.engines),new $scope.shipCon(engArr)];
+            $scope.ships = [new $scope.shipCon(gud.engines), new $scope.shipCon(engArr)];
         }
     }
     $scope.init = function() {
@@ -198,7 +216,7 @@ var app = angular.module('lb-app', []).controller('ground-control', function($sc
         } else {
             if ($scope.ships[0].score < $scope.ships[1].score) {
                 //ship1 did better than ship2.
-                $scope.makeNewShip($scope.ships[0], $scope.ships[1]); 
+                $scope.makeNewShip($scope.ships[0], $scope.ships[1]);
             } else {
                 $scope.makeNewShip($scope.ships[1], $scope.ships[0]);
             }
