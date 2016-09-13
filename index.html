@@ -8,9 +8,10 @@
 
 <body ng-app='lb-app' ng-controller='ground-control'>
 <br/>
-<h3>Number of generations:{{gens}}</h3>
+<h4>Number of generations:{{gens}}</h4>
+<h4>Best (lowest) score: {{bestScore}}</h4>
 <br/>
-<div id='muta'>&#9763;</div>
+<div id='muta'>&#9763;Mutated: engine {{mutation}}</div>
     <div id='ship' ng-repeat ='ship in ships' style='left:{{ship.x}}px;top:{{ship.y}}px;'>
         <div class='eng' ng-repeat='e in ship.engines' style='transform:rotateZ({{e.a}}deg);' ng-show='
         e.on'>
